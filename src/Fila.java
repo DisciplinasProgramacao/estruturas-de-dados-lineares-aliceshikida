@@ -1,3 +1,6 @@
+import java.util.function.Function;
+import java.util.function.Predicate;
+
 public class Fila<T> {
     private Celula<T> primeiro, ultimo;
 
@@ -39,5 +42,40 @@ public class Fila<T> {
             System.out.print(i.getItem() + " ");
         }
         System.out.println("]");
+    }
+
+    // metodo novo da aula:
+    public Fila<T> filtrar(Predicate<T> condicional, int quantidade) {
+        Fila<T> novaFila = new Fila<>();
+        Celula<T> atual = primeiro.getProximo();
+        int count = 0;
+
+        while (atual != null && count < quantidade) {
+            if (condicional.test(atual.getItem())) {
+                novaFila.inserir(atual.getItem());
+            }
+            atual = atual.getProximo();
+            count++;
+        }
+
+        return novaFila;
+    }
+
+        //novo metodo tb
+      public double calcularValorMedio(Function<T, Double> extrator, int quantidade) {
+        Celula<T> atual = primeiro.getProximo();
+        int count = 0;
+        double soma = 0.0;
+
+        while (atual != null && count < quantidade) {
+            Double valor = extrator.apply(atual.getItem());
+            if (valor != null) {
+                soma += valor;
+            }
+            atual = atual.getProximo();
+            count++;
+        }
+
+        return (count == 0) ? 0.0 : soma / count;
     }
 }
