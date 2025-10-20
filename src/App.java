@@ -207,14 +207,48 @@ public class App {
      * @param pedido O pedido que deve ser finalizado.
      */
     public static void finalizarPedido(Pedido pedido) {
-    	
-    	// TODO
+        if (pedido == null) {
+            System.out.println("Nenhum pedido em andamento para finalizar.");
+            return;
+        }
+        pilhaPedidos.empilhar(pedido);
+        System.out.println("Pedido finalizado e armazenado com sucesso!");
     }
-    
+
+
+
     public static void listarProdutosPedidosRecentes() {
-    	
-    	// TODO
-    }
+            if (pilhaPedidos.vazia()) {
+                System.out.println("Nenhum pedido foi finalizado ainda.");
+                return;
+            }
+
+            Integer quantos = lerOpcao("Quantos pedidos recentes deseja listar?", Integer.class);
+
+            try {
+                // Cria uma cópia da pilha com os N pedidos mais recentes
+                Pilha<Pedido> pedidosRecentes = pilhaPedidos.subPilha(quantos);
+
+                System.out.println("\n--- Produtos dos pedidos mais recentes ---");
+
+                while (!pedidosRecentes.vazia()) {
+                    Pedido pedido = pedidosRecentes.desempilhar();
+                    System.out.println("\nPedido Nº " + pedido.getIdPedido() +
+                            " - Data: " + pedido.getDataPedido());
+                    System.out.println("Produtos:");
+
+                    Produto[] produtos = pedido.getProdutos();
+                    for (int i = 0; i < pedido.getQuantosProdutos(); i++) {
+                        System.out.println(" - " + produtos[i].toString());
+                    }
+                    System.out.println("Valor total: R$ " + String.format("%.2f", pedido.valorFinal()));
+                }
+
+            } catch (IllegalArgumentException e) {
+                System.out.println("Não há pedidos suficientes para exibir essa quantidade.");
+            }
+        }
+
     
 	public static void main(String[] args) {
 		

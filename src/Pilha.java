@@ -53,8 +53,32 @@ public class Pilha<E> {
 	 * @throws IllegalArgumentException se a pilha não contém numItens elementos.
 	 */
 	public Pilha<E> subPilha(int numItens) {
-		
-		// TODO
-		return null;
+		if (numItens < 0) {
+			throw new IllegalArgumentException("O número de itens deve ser positivo.");
+		}
+
+		Pilha<E> subPilha = new Pilha<>();
+		Pilha<E> aux = new Pilha<>();
+
+		Celula<E> atual = this.topo;
+		int contador = 0;
+
+		// Verifica se há elementos suficientes e empilha em uma pilha auxiliar para manter a ordem
+		while (contador < numItens && atual != this.fundo) {
+			aux.empilhar(atual.getItem());
+			atual = atual.getProximo();
+			contador++;
+		}
+
+		if (contador < numItens) {
+			throw new IllegalArgumentException("A pilha não contém elementos suficientes.");
+		}
+
+		// Desempilha da auxiliar para manter a ordem original na nova subPilha
+		while (!aux.vazia()) {
+			subPilha.empilhar(aux.desempilhar());
+		}
+
+		return subPilha;
 	}
 }

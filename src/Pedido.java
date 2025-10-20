@@ -143,7 +143,28 @@ public class Pedido implements Comparable<Pedido>{
     		return 1;
     	}
     }
-    
+
+	private boolean finalizado = false;
+
+	public boolean finalizarPedido() {
+		if (finalizado) {
+			System.out.println("O pedido já foi finalizado.");
+			return false;
+		}
+
+		if (quantProdutos == 0) {
+			System.out.println("Não é possível finalizar um pedido sem produtos.");
+			return false;
+		}
+
+		finalizado = true;
+		double valor = valorFinal();
+		System.out.println("Pedido finalizado com sucesso!");
+		System.out.printf("Valor final a pagar: R$ %.2f%n", valor);
+		return true;
+	}
+
+
     public LocalDate getDataPedido() {
     	return dataPedido;
     }
@@ -159,4 +180,5 @@ public class Pedido implements Comparable<Pedido>{
     public Produto[] getProdutos() {
     	return produtos;
     }
+
 }
