@@ -4,6 +4,7 @@ import java.util.Scanner;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.time.format.DateTimeFormatter;
 
 public class App {
 
@@ -21,6 +22,8 @@ public class App {
 
     /** Pilha de pedidos */
     static Pilha<Pedido> pilhaPedidos = new Pilha<>();
+
+    static Lista<Pedido> listaPedidos = new Lista<>();
         
     static void limparTela() {
         System.out.print("\033[H\033[2J");
@@ -64,6 +67,8 @@ public class App {
         System.out.println("4 - Iniciar novo pedido");
         System.out.println("5 - Fechar pedido");
         System.out.println("6 - Listar produtos dos pedidos mais recentes");
+        System.out.println("7 - Mostrar faturamento");
+        System.out.println("8 -Quantitade de pedidos entre datas");
         System.out.println("0 - Sair");
         System.out.print("Digite sua opção: ");
         return Integer.parseInt(teclado.nextLine());
@@ -249,6 +254,33 @@ public class App {
             }
         }
 
+                public static void obterFaturamento(){
+                    if (listaPedidos.vazia()) {
+                        System.out.println("nao foi encontrado nenhum pedido");
+                        return;
+                    } double faturamento = listaPedidos.obterSoma(pedido -> pedido.valorFinal());
+                    System.out.println("faturamento R$:" + faturamento);
+                }
+
+                public static void contarPorData(){
+                        if (listaPedidos.vazia()){
+                            return; // nada foi registrado
+                        } DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                   System.out.println("data inicial");
+                   LocalDate dataInicial = LocalDate.parse(teclado.nextLine(), formato);
+                   System.out.println("data final");
+                   LocalDate dataFinal = LocalDate.parse(teclado.nextLine(), formato);
+
+                   int quantidade = listaPedidos.contar(pedido -> 
+                   pedido.getDataPedido().isAfter(dataInicial) &&
+                   pedido.getDataPedido().isBefore(dataFinal)
+                   );
+                   System.out.println("quantidade de pedidos entre datas" + quantidade);
+
+                    };
+                
+            
+
     
 	public static void main(String[] args) {
 		
@@ -270,6 +302,8 @@ public class App {
                 case 4 -> pedido = iniciarPedido();
                 case 5 -> finalizarPedido(pedido);
                 case 6 -> listarProdutosPedidosRecentes();
+                case 7 -> obterFaturamento();
+                case 8 -> contarPorData();
             }
             pausa();
         }while(opcao != 0);       
